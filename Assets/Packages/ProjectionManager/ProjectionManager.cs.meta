@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 452d5115a0ff484429d34bdf4e3ecef0
+timeCreated: 1487859920
+licenseType: Pro
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - drawRectMaterial: {fileID: 2100000, guid: 76a6a54bc4e624945a64767593d7fb7d, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
