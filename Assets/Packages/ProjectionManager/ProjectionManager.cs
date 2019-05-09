@@ -35,18 +35,24 @@ public abstract class ProjectionManager : MonoBehaviour
 
     #region Method
 
-
     protected abstract void OnRenderImage(RenderTexture source, RenderTexture destination);
 
-    protected abstract void ProjectionAll(RenderTexture destination);
+    protected abstract void Projection(RenderTexture destination);
 
-    protected virtual void Projection(RenderTexture source, RenderTexture destination, Vector2[] warpingQuad)
+    protected virtual void Projection(RenderTexture source, RenderTexture destination)
     {
         int width  = destination ? destination.width  : Screen.width;
         int height = destination ? destination.height : Screen.height;
 
         Rect viewportRect = new Rect(0, 0, width, height);
 
+        this.Projection(destination,
+        (viewportRect, source, ProjectionManager.UvCoordsDefault, ProjectionManager.WarpingQuadDefault));
+    }
+
+    protected virtual void Projection(RenderTexture destination,
+                                      params (Rect, RenderTexture, Vector2[], Vector2[])[] drawRects)
+    {
         Graphics.SetRenderTarget(destination);
 
         GL.Clear(true, true, Color.clear);
@@ -55,7 +61,10 @@ public abstract class ProjectionManager : MonoBehaviour
 
         GL.LoadOrtho();
 
-        DrawRect(viewportRect, source, ProjectionManager.UvCoordsDefault, warpingQuad);
+        foreach (var drawRect in drawRects)
+        {
+            DrawRect(drawRect.Item1, drawRect.Item2, drawRect.Item3, drawRect.Item4);
+        }
 
         GL.PopMatrix();
     }
