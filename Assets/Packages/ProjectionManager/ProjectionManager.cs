@@ -37,8 +37,6 @@ public abstract class ProjectionManager : MonoBehaviour
 
     protected abstract void OnRenderImage(RenderTexture source, RenderTexture destination);
 
-    protected abstract void Projection(RenderTexture destination);
-
     protected virtual void Projection(RenderTexture source, RenderTexture destination)
     {
         int width  = destination ? destination.width  : Screen.width;
