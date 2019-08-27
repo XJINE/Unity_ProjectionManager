@@ -41,17 +41,21 @@ public abstract class ProjectionManager : MonoBehaviour
 
     protected void HorizontalProjection(RenderTexture destination, params RenderTexture[] sources)
     {
-        int height = destination ? destination.height : Screen.height;
+        var drawRects = new (Rect, RenderTexture, Vector2[], Vector2[])[sources.Length];
         int rectX  = 0;
 
-        foreach (RenderTexture source in sources)
+        for(int i = 0; i < sources.Length; i++)
         {
-            Projection(destination, (new Rect(rectX, 0, source.width, source.height),
-                                     source,
-                                     ProjectionManager.UvCoordsDefault,
-                                     ProjectionManager.WarpingQuadDefault));
-            rectX += source.width;
+            int width = sources[i].width;
+            int height = sources[i].height;
+
+            drawRects[i] = (new Rect(rectX, 0, width, height), sources[i],
+                            ProjectionManager.UvCoordsDefault,
+                            ProjectionManager.WarpingQuadDefault);
+            rectX += width;
         }
+
+        Projection(destination, drawRects);
     }
 
     protected virtual void Projection(RenderTexture source, RenderTexture destination)
