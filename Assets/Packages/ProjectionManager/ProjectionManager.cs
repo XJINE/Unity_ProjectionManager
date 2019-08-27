@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Runtime.Serialization;
+using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 public abstract class ProjectionManager : MonoBehaviour
 {
     #region Field
 
+    [IgnoreDataMember]
     public Material drawRectMaterial;
 
     public static readonly Vector2[] WarpingQuadDefault = new Vector2[]
@@ -36,6 +38,21 @@ public abstract class ProjectionManager : MonoBehaviour
     #region Method
 
     protected abstract void OnRenderImage(RenderTexture source, RenderTexture destination);
+
+    protected void HorizontalProjection(RenderTexture destination, params RenderTexture[] sources)
+    {
+        int height = destination ? destination.height : Screen.height;
+        int rectX  = 0;
+
+        foreach (RenderTexture source in sources)
+        {
+            Projection(destination, (new Rect(rectX, 0, source.width, source.height),
+                                     source,
+                                     ProjectionManager.UvCoordsDefault,
+                                     ProjectionManager.WarpingQuadDefault));
+            rectX += source.width;
+        }
+    }
 
     protected virtual void Projection(RenderTexture source, RenderTexture destination)
     {
