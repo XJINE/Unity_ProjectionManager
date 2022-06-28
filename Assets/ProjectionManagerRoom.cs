@@ -26,29 +26,23 @@ public class ProjectionManagerRoom : ProjectionManager
     public RenderTexture textureBack;
     public RenderTexture textureBottom;
 
-    public Vector2[] warpingQuadFront       = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
-    public Vector2[] warpingQuadLeft        = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
-    public Vector2[] warpingQuadRight       = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
-    public Vector2[] warpingQuadBack        = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
-    public Vector2[] warpingQuadBottom      = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
-    public Vector2[] warpingQuadBottomLeft  = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
-    public Vector2[] warpingQuadBottomRight = new Vector2[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
+    public Vector2[] warpFront       = { new (0, 0), new (0, 1), new (1, 1), new (1, 0) };
+    public Vector2[] warpLeft        = { new (0, 0), new (0, 1), new (1, 1), new (1, 0) };
+    public Vector2[] warpRight       = { new (0, 0), new (0, 1), new (1, 1), new (1, 0) };
+    public Vector2[] warpBack        = { new (0, 0), new (0, 1), new (1, 1), new (1, 0) };
+    public Vector2[] warpBottom      = { new (0, 0), new (0, 1), new (1, 1), new (1, 0) };
+    public Vector2[] warpBottomLeft  = { new (0, 0), new (0, 1), new (1, 1), new (1, 0) };
+    public Vector2[] warpBottomRight = { new (0, 0), new (0, 1), new (1, 1), new (1, 0) };
 
-    protected static readonly Vector2[] UvCoordsBottomLeft = new[]
-    {
-        new Vector2(0.5f, 0),
-        new Vector2(   0, 0),
-        new Vector2(   0, 1),
-        new Vector2(0.5f, 1)
-    };
+    protected static readonly Vector2[] BottomLeftUV = { new (0.5f, 0),
+                                                         new (   0, 0),
+                                                         new (   0, 1),
+                                                         new (0.5f, 1) };
 
-    protected static readonly Vector2[] UvCoordsBottomRight = new[]
-    {
-        new Vector2(   1, 0),
-        new Vector2(0.5f, 0),
-        new Vector2(0.5f, 1),
-        new Vector2(   1, 1)
-    };
+    protected static readonly Vector2[] BottomRightUV = { new (   1, 0),
+                                                          new (0.5f, 0),
+                                                          new (0.5f, 1),
+                                                          new (   1, 1) };
 
     #endregion Field
 
@@ -56,44 +50,44 @@ public class ProjectionManagerRoom : ProjectionManager
 
     protected override void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        switch (this.projectionMode)
+        switch (projectionMode)
         {
             case ProjectionMode.All:
             {
                 // NOTE:
                 // Output image.
-                // ―――――――――――――――――――――
-                // | ↑ Front  | ↑ Left  | Bottom | Bottom |
-                // ――――――――――― | Left   | Right  |
-                // | ↑ Back   | ↑ Right | →     | →     |
-                // ―――――――――――――――――――――
+                // ―――――――――――――――――――――――――――――――――――――――――
+                // | ↑ Front  | ↑ Left   | Bottom | Bottom |
+                // ――――――――――――――――――――― | Left   | Right  |
+                // | ↑ Back   | ↑ Right  | →      | →      |
+                // ―――――――――――――――――――――――――――――――――――――――――
 
-                int quarterWidth = Screen.width  / 4;
-                int halfHeight   = Screen.height / 2;
+                var quarterWidth = Screen.width  / 4;
+                var halfHeight   = Screen.height / 2;
 
-                Rect viewportRectFront       = new Rect(0,                halfHeight, quarterWidth, halfHeight);
-                Rect viewportRectLeft        = new Rect(quarterWidth,     halfHeight, quarterWidth, halfHeight);
-                Rect viewportRectRight       = new Rect(quarterWidth,     0,          quarterWidth, halfHeight);
-                Rect viewportRectBack        = new Rect(0,                0,          quarterWidth, halfHeight);
-                Rect viewportRectBotomLeft   = new Rect(quarterWidth * 2, 0,          quarterWidth, Screen.height);
-                Rect viewportRectBottomRight = new Rect(quarterWidth * 3, 0,          quarterWidth, Screen.height);
+                var viewportRectFront       = new Rect(0,                halfHeight, quarterWidth, halfHeight);
+                var viewportRectLeft        = new Rect(quarterWidth,     halfHeight, quarterWidth, halfHeight);
+                var viewportRectRight       = new Rect(quarterWidth,     0,          quarterWidth, halfHeight);
+                var viewportRectBack        = new Rect(0,                0,          quarterWidth, halfHeight);
+                var viewportRectBottomLeft  = new Rect(quarterWidth * 2, 0,          quarterWidth, Screen.height);
+                var viewportRectBottomRight = new Rect(quarterWidth * 3, 0,          quarterWidth, Screen.height);
 
                 base.Projection(destination,
-                (viewportRectFront,       this.textureFront,  ProjectionManager.UvCoordsDefault,         this.warpingQuadFront),
-                (viewportRectLeft,        this.textureLeft,   ProjectionManager.UvCoordsDefault,         this.warpingQuadLeft),
-                (viewportRectRight,       this.textureRight,  ProjectionManager.UvCoordsDefault,         this.warpingQuadRight),
-                (viewportRectBack,        this.textureBack,   ProjectionManager.UvCoordsDefault,         this.warpingQuadBack),
-                (viewportRectBotomLeft,   this.textureBottom, ProjectionManagerRoom.UvCoordsBottomLeft,  this.warpingQuadBottomLeft),
-                (viewportRectBottomRight, this.textureBottom, ProjectionManagerRoom.UvCoordsBottomRight, this.warpingQuadBottomRight));
+                (viewportRectFront,       textureFront,  DefaultUV,     warpFront),
+                (viewportRectLeft,        textureLeft,   DefaultUV,     warpLeft),
+                (viewportRectRight,       textureRight,  DefaultUV,     warpRight),
+                (viewportRectBack,        textureBack,   DefaultUV,     warpBack),
+                (viewportRectBottomLeft,  textureBottom, BottomLeftUV,  warpBottomLeft),
+                (viewportRectBottomRight, textureBottom, BottomRightUV, warpBottomRight));
 
                 break;
             }
 
-            case ProjectionMode.Front:  base.Projection(this.textureFront,  destination); break;
-            case ProjectionMode.Left:   base.Projection(this.textureLeft,   destination); break;
-            case ProjectionMode.Right:  base.Projection(this.textureRight,  destination); break;
-            case ProjectionMode.Back:   base.Projection(this.textureBack,   destination); break;
-            case ProjectionMode.Bottom: base.Projection(this.textureBottom, destination); break;
+            case ProjectionMode.Front:  base.Projection(textureFront,  destination); break;
+            case ProjectionMode.Left:   base.Projection(textureLeft,   destination); break;
+            case ProjectionMode.Right:  base.Projection(textureRight,  destination); break;
+            case ProjectionMode.Back:   base.Projection(textureBack,   destination); break;
+            case ProjectionMode.Bottom: base.Projection(textureBottom, destination); break;
         }
     }
 

@@ -1,14 +1,16 @@
 # Unity_ProjectionManager
 
-<img src="https://github.com/XJINE/Unity_ProjectionManager/blob/master/Screenshot.png" width="100%" height="auto" />
+<img src="https://github.com/XJINE/Unity_ProjectionManager/blob/main/Screenshot.png" width="100%" height="auto" />
 
-Layout some RenderRexture for projection.
+Layout some RenderTexture for projection mapping.
 
-## Import to Your Project
+## Importing
 
-You can import this asset from UnityPackage.
+You can use Package Manager or import it directly.
 
-- [ProjectionManager.unitypackage](https://github.com/XJINE/Unity_ProjectionManager/blob/master/ProjectionManager.unitypackage)
+```
+https://github.com/XJINE/Unity_ProjectionManager.git?path=Assets/Packages/ProjectionManager
+```
 
 ## How to Use
 

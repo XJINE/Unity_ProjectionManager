@@ -1,4 +1,4 @@
-﻿Shader "Unlit/UnlitTexture"
+﻿Shader "ProjectionManager"
 {
     // NOTE:
     // This is needed to render a texture which has an alpha-channel.
@@ -6,8 +6,7 @@
 
     Properties
     {
-        [HideInInSpector]
-        _MainTex ("Texture", 2D) = "white" {}
+        [HideInInSpector] _MainTex ("Texture", 2D) = "white" {}
     }
     SubShader
     {
@@ -22,11 +21,12 @@
 
             sampler2D _MainTex;
 
-            fixed4 frag (v2f_img input) : SV_Target
+            fixed4 frag (v2f_img i) : SV_Target
             {
-                fixed4 color = tex2D(_MainTex, input.uv);
+                fixed4 color = tex2D(_MainTex, i.uv);
                 return color;
             }
+
             ENDCG
         }
     }
